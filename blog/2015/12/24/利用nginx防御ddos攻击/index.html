@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>利用nginx防御DDoS攻击 &middot; 杰克奶爸</title>
+
+  
+  <link rel="stylesheet" href="http://jackyu1978.github.io/css/poole.css">
+  <link rel="stylesheet" href="http://jackyu1978.github.io/css/hyde.css">
+  <link rel="stylesheet" href="http://jackyu1978.github.io/css/poole-overrides.css">
+  <link rel="stylesheet" href="http://jackyu1978.github.io/css/hyde-overrides.css">
+  <link rel="stylesheet" href="http://jackyu1978.github.io/css/hyde-x.css">
+  <link rel="stylesheet" href="http://jackyu1978.github.io/css/highlight/dark.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://jackyu1978.github.io/touch-icon-144-precomposed.png">
+  <link href="http://jackyu1978.github.io/favicon.png" rel="icon">
+
+  
+  
+  
+  
+
+  <meta name="description" content="Your default page description">
+  <meta name="keywords" content="nginx,DDos">
+  <link rel="author" href="http://plus.google.com/Your%20Google&#43;%20profile%20ID">
+</head>
+<body class="theme-base-07">
+<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+        <img src="http://jackyu1978.github.io/img/author.png"
+             alt="author" title="杰克奶爸">
+      <h1>杰克奶爸</h1>
+      <p class="lead">做一个思考者</p>
+    </div>
+
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item"><a href="http://jackyu1978.github.io/">Blog</a></li>
+      
+    </ul>
+
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item">
+      <a href="http://www.github.com/jackyu1978"><i class="fa fa-github-square fa-3x"></i></a>
+      
+      
+      
+      
+      
+      
+      
+      <a href="http://jackyu1978.github.io/index.xml" type="application/rss+xml"><i class="fa fa-rss-square fa-3x"></i></a>
+      </li>
+    </ul>
+
+    
+
+    <p>Copyright &copy; 2015 All rights reserved.<br/>
+    </p>
+  </div>
+</div>
+
+
+<div class="content container">
+  <div class="post">
+    <h1>利用nginx防御DDoS攻击</h1>
+    <span class="post-date">Dec 24, 2015 &middot; 2 minute read
+    
+    <br/>
+    <a  href="http://jackyu1978.github.io/categories/nginx">nginx</a>
+    </span>
+    
+
+<p>nginx有很多特性可以用来有效防御DDoS攻击</p>
+
+<h2 id="限制请求频率:8cbe935a207c6e7ff36bf616be0564bc">限制请求频率</h2>
+
+<p>DDoS攻击的攻击者的请求频率肯定会大于真实用户请求的频率，这样才能起到攻击的目的，如实我们就可以利用nginx来限制客户端请求的频率，具体设置的阈值可以根据实际业务场景及以前的经验值来确定。
+比如你可以配置nginx限制同一IP地址对login页面的请求为每次/2秒（折算成一分钟就是最大30次），超过这个阈值nginx就会阻断：</p>
+
+<pre><code>limit_req_zone $binary_remote_addr zone=one:10m rate=30r/m;
+
+server {
+...
+    location /login.html {
+        limit_req zone=one;
+    ...
+    }
+}
+</code></pre>
+
+<p>limit_req_zone指令配置一段名字为 <strong>one</strong> 的共享内存区域，来存储请求状态，关键字为客户端IP($binary_remote_addr)。<strong>/login.html</strong> 的location块中的limit_req指令引用该共享内存区域。</p>
+
+<h2 id="限制链接数:8cbe935a207c6e7ff36bf616be0564bc">限制链接数</h2>
+
+<p>DDoS的攻击者往往发起大量的网络链接，以期起到攻击目的。所以我们可以限制每个单IP客户端的链接数，甚至可以限制每个客户端IP可以发起到网站特定区域或路径的链接数。比如：限制每个开发可以发起到<strong>/store</strong>区域的链接数为10：</p>
+
+<pre><code>limit_conn_zone $binary_remote_addr zone=addr:10m;
+
+server {
+...
+    location /store/ {
+        limit_conn addr 10;
+        ...
+    }
+}
+</code></pre>
+
+<p>limit_conn_zone指令配置一段名字为 <strong>addr</strong> 的共享内存区域，来存储请求状态，关键字为客户端IP($binary_remote_addr)。<strong>/store</strong> 的location块中的limit_conn指令引用该共享内存区域,并限制每个IP的链接数最大为10。</p>
+
+<blockquote>
+<p><strong>注意：国内很多用户都是通过NAT上网，同一个局域网中的用户出口IP是一样的，所以在设置链接数限制时，要考虑这种情况，不然可能会导致服务不可用！</strong></p>
+</blockquote>
+
+<h2 id="关闭慢速链接:8cbe935a207c6e7ff36bf616be0564bc">关闭慢速链接</h2>
+
+<p>Http慢速攻击往往也是DDoS攻击中一种常见的攻击形式，利用nginx的<strong>client_body_timeout</strong> 和 <strong>client_header_timeout</strong>指令也可以防护这方面的攻击：</p>
+
+<pre><code>server {
+    client_body_timeout 5s;
+    client_header_timeout 5s;
+    ...
+}
+</code></pre>
+
+<p>client_body_timeout指令：控制客户端在两次发送Body数据之间的间隔。</p>
+
+<p>client_header_timeout指令：控制客户端在两次发送http头数据之间的间隔。</p>
+
+<h2 id="设置ip地址黑名单:8cbe935a207c6e7ff36bf616be0564bc">设置IP地址黑名单</h2>
+
+<p>如果你已经确定某个客户端IP正在发动攻击，可以通过设置IP地址黑名单的方式加以阻断。</p>
+
+<p>设置IP地址段：</p>
+
+<pre><code>location / {
+deny 123.123.123.0/28;
+...
+}
+</code></pre>
+
+<p>设置单个IP地址：</p>
+
+<pre><code>location / {
+    deny 123.123.123.3;
+    deny 123.123.123.5;
+    deny 123.123.123.7;
+    ...
+}
+</code></pre>
+
+<h2 id="设置ip地址白名单:8cbe935a207c6e7ff36bf616be0564bc">设置IP地址白名单</h2>
+
+<p>如果你的网站只允许特定区域的用户访问，就可以采用设置白名单的方式加以保护：</p>
+
+<pre><code>location / {
+    allow 192.168.1.0/24;
+    deny all;  #阻断除白名单外的其他客户端访问
+    ...
+}
+</code></pre>
+
+<h2 id="利用缓存机制来减少后端服务请求:8cbe935a207c6e7ff36bf616be0564bc">利用缓存机制来减少后端服务请求</h2>
+
+<p>我们可以配置nginx来缓存内容，以此来减少到后端服务器的请求，达到减少通讯，缓解DDoS攻击的目的，其中有两个指令比较有帮助：</p>
+
+<ol>
+<li>proxy_cache_use_statle:告诉nginx，在缓存过期的时候怎么处理，为防止DDoS，这里可以设置为<em>on</em></li>
+<li>proxy_cache_key:设置缓存的关键字，默认值（$scheme$proxy_host$request_uri）。<strong>注意：</strong>如果关键字包含$query_string变量，攻击者就可以发送一些随机query strings导致大量无用缓存信息。所以一般推荐不要加上$query_string参数。</li>
+</ol>
+
+<h2 id="阻断请求:8cbe935a207c6e7ff36bf616be0564bc">阻断请求</h2>
+
+<p>可以配置nginx来阻断一些类型的请求：</p>
+
+<ul>
+<li>特别的被攻击的URL</li>
+<li>包含特别的User-Agent头的请求</li>
+<li>包含特别Referer头的请求</li>
+<li>包含其他特别Http内容的请求</li>
+</ul>
+
+<p>例如：</p>
+
+<pre><code>location /foo.php {  #阻断对/foo.php的访问
+    deny all;
+}
+
+location / { #阻断User-Agent头的值为foo或bar的请求
+    if ($http_user_agent ~* foo|bar) {
+        return 403;
+    }
+    ...
+}
+</code></pre>
+
+<p>$http_*name*变量代指特定的请求头，如$http_user_agent</p>
+
+<h2 id="限制到后端服务器的链接:8cbe935a207c6e7ff36bf616be0564bc">限制到后端服务器的链接</h2>
+
+<p>nginx往往比backend服务器可以处理更大量的并发链接，在nginx上配置backend服务器的链接限制也是个不错的策略：</p>
+
+<pre><code>upstream website {
+    server 192.168.100.1:80 max_conns=200; #最大连接数200
+    server 192.168.100.2:80 max_conns=200; 
+    queue 10 timeout=30s; #queue:所有服务器都达到最大链接数时的队列数，timeout:多长时间从队列中获取一个请求
+}
+</code></pre>
+
+<h2 id="应对range攻击:8cbe935a207c6e7ff36bf616be0564bc">应对Range攻击</h2>
+
+<p>一种攻击方式是发送一个http投中Range是很大值的请求，导致缓冲区溢出：</p>
+
+<pre><code>GET / HTTP/1.1\r\n
+Host: stuff\r\n
+Range: bytes=0-18446744073709551615\r\n
+\r\n
+</code></pre>
+
+<p>应对这种攻击的其中一种方式是使用proxy_set_header指令设置Range为空字符串（&rdquo;&ldquo;），这会让nginx在将请求转发到后端服务器的时候删除Range字段：</p>
+
+<pre><code>server {
+    listen 80;
+
+    location / {
+        proxy_set_header Range &quot;&quot;;
+        proxy_pass http://windowsserver:80;
+    }
+}
+</code></pre>
+
+<p>如果你的应用需要用到byte-range,可以使用下面的方法来检查Range字段的值是否超大：</p>
+
+<pre><code>map $http_range $saferange {
+    &quot;~\d{10,}&quot; &quot;&quot;;  # if it matches a string of 10 or more integers, remove it
+    default $http_range;
+}
+
+server {
+    listen 80;
+
+    location / {
+            proxy_set_header Range $saferange;
+            proxy_pass http://windowsserver:80;
+    }
+}
+</code></pre>
+
+<p>当Range的值超大的时候也可以返回444错误码，让nginx直接关闭连接：</p>
+
+<pre><code>server {
+    listen 80;
+
+    if ($http_range ~ &quot;\d{9,}&quot;) {
+        return 444;
+    }
+
+    location / {
+            proxy_pass http://windowsserver:80;
+    }
+}
+</code></pre>
+
+<h2 id="处理高负载:8cbe935a207c6e7ff36bf616be0564bc">处理高负载</h2>
+
+<p>DDoS攻击通常导致高负载。可以对nginx和操作系统网络配置方面做些优化来处理高负载问题，详细内容见下篇。：）</p>
+
+<hr />
+
+<p><strong>参考</strong>
+<a href="https://www.nginx.com/blog/mitigating-ddos-attacks-with-nginx-and-nginx-plus/">https://www.nginx.com/blog/mitigating-ddos-attacks-with-nginx-and-nginx-plus/</a></p>
+
+  </div>
+  
+</div>
+
+
+
+
+<script src="http://jackyu1978.github.io/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script>
+  var _gaq=[['_setAccount','Your Google Analytics tracking code'],['_trackPageview']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+</body>
+</html>
+

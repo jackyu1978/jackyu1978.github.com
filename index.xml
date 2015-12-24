@@ -6,8 +6,217 @@
     <description>Recent content on 杰克的烦恼</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 17 Dec 2015 23:42:04 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 24 Dec 2015 22:16:41 +0800</lastBuildDate>
     <atom:link href="http://jackyu1978.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>利用nginx防御DDoS攻击</title>
+      <link>http://jackyu1978.github.io/blog/2015/12/24/%E5%88%A9%E7%94%A8nginx%E9%98%B2%E5%BE%A1ddos%E6%94%BB%E5%87%BB/</link>
+      <pubDate>Thu, 24 Dec 2015 22:16:41 +0800</pubDate>
+      
+      <guid>http://jackyu1978.github.io/blog/2015/12/24/%E5%88%A9%E7%94%A8nginx%E9%98%B2%E5%BE%A1ddos%E6%94%BB%E5%87%BB/</guid>
+      <description>
+
+&lt;p&gt;nginx有很多特性可以用来有效防御DDoS攻击&lt;/p&gt;
+
+&lt;h2 id=&#34;限制请求频率:8cbe935a207c6e7ff36bf616be0564bc&#34;&gt;限制请求频率&lt;/h2&gt;
+
+&lt;p&gt;DDoS攻击的攻击者的请求频率肯定会大于真实用户请求的频率，这样才能起到攻击的目的，如实我们就可以利用nginx来限制客户端请求的频率，具体设置的阈值可以根据实际业务场景及以前的经验值来确定。
+比如你可以配置nginx限制同一IP地址对login页面的请求为每次/2秒（折算成一分钟就是最大30次），超过这个阈值nginx就会阻断：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;limit_req_zone $binary_remote_addr zone=one:10m rate=30r/m;
+
+server {
+...
+    location /login.html {
+        limit_req zone=one;
+    ...
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;limit_req_zone指令配置一段名字为 &lt;strong&gt;one&lt;/strong&gt; 的共享内存区域，来存储请求状态，关键字为客户端IP($binary_remote_addr)。&lt;strong&gt;/login.html&lt;/strong&gt; 的location块中的limit_req指令引用该共享内存区域。&lt;/p&gt;
+
+&lt;h2 id=&#34;限制链接数:8cbe935a207c6e7ff36bf616be0564bc&#34;&gt;限制链接数&lt;/h2&gt;
+
+&lt;p&gt;DDoS的攻击者往往发起大量的网络链接，以期起到攻击目的。所以我们可以限制每个单IP客户端的链接数，甚至可以限制每个客户端IP可以发起到网站特定区域或路径的链接数。比如：限制每个开发可以发起到&lt;strong&gt;/store&lt;/strong&gt;区域的链接数为10：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;limit_conn_zone $binary_remote_addr zone=addr:10m;
+
+server {
+...
+    location /store/ {
+        limit_conn addr 10;
+        ...
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;limit_conn_zone指令配置一段名字为 &lt;strong&gt;addr&lt;/strong&gt; 的共享内存区域，来存储请求状态，关键字为客户端IP($binary_remote_addr)。&lt;strong&gt;/store&lt;/strong&gt; 的location块中的limit_conn指令引用该共享内存区域,并限制每个IP的链接数最大为10。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;注意：国内很多用户都是通过NAT上网，同一个局域网中的用户出口IP是一样的，所以在设置链接数限制时，要考虑这种情况，不然可能会导致服务不可用！&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;关闭慢速链接:8cbe935a207c6e7ff36bf616be0564bc&#34;&gt;关闭慢速链接&lt;/h2&gt;
+
+&lt;p&gt;Http慢速攻击往往也是DDoS攻击中一种常见的攻击形式，利用nginx的&lt;strong&gt;client_body_timeout&lt;/strong&gt; 和 &lt;strong&gt;client_header_timeout&lt;/strong&gt;指令也可以防护这方面的攻击：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;server {
+    client_body_timeout 5s;
+    client_header_timeout 5s;
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;client_body_timeout指令：控制客户端在两次发送Body数据之间的间隔。&lt;/p&gt;
+
+&lt;p&gt;client_header_timeout指令：控制客户端在两次发送http头数据之间的间隔。&lt;/p&gt;
+
+&lt;h2 id=&#34;设置ip地址黑名单:8cbe935a207c6e7ff36bf616be0564bc&#34;&gt;设置IP地址黑名单&lt;/h2&gt;
+
+&lt;p&gt;如果你已经确定某个客户端IP正在发动攻击，可以通过设置IP地址黑名单的方式加以阻断。&lt;/p&gt;
+
+&lt;p&gt;设置IP地址段：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;location / {
+deny 123.123.123.0/28;
+...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;设置单个IP地址：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;location / {
+    deny 123.123.123.3;
+    deny 123.123.123.5;
+    deny 123.123.123.7;
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;设置ip地址白名单:8cbe935a207c6e7ff36bf616be0564bc&#34;&gt;设置IP地址白名单&lt;/h2&gt;
+
+&lt;p&gt;如果你的网站只允许特定区域的用户访问，就可以采用设置白名单的方式加以保护：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;location / {
+    allow 192.168.1.0/24;
+    deny all;  #阻断除白名单外的其他客户端访问
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;利用缓存机制来减少后端服务请求:8cbe935a207c6e7ff36bf616be0564bc&#34;&gt;利用缓存机制来减少后端服务请求&lt;/h2&gt;
+
+&lt;p&gt;我们可以配置nginx来缓存内容，以此来减少到后端服务器的请求，达到减少通讯，缓解DDoS攻击的目的，其中有两个指令比较有帮助：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;proxy_cache_use_statle:告诉nginx，在缓存过期的时候怎么处理，为防止DDoS，这里可以设置为&lt;em&gt;on&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;proxy_cache_key:设置缓存的关键字，默认值（$scheme$proxy_host$request_uri）。&lt;strong&gt;注意：&lt;/strong&gt;如果关键字包含$query_string变量，攻击者就可以发送一些随机query strings导致大量无用缓存信息。所以一般推荐不要加上$query_string参数。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;阻断请求:8cbe935a207c6e7ff36bf616be0564bc&#34;&gt;阻断请求&lt;/h2&gt;
+
+&lt;p&gt;可以配置nginx来阻断一些类型的请求：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;特别的被攻击的URL&lt;/li&gt;
+&lt;li&gt;包含特别的User-Agent头的请求&lt;/li&gt;
+&lt;li&gt;包含特别Referer头的请求&lt;/li&gt;
+&lt;li&gt;包含其他特别Http内容的请求&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;location /foo.php {  #阻断对/foo.php的访问
+    deny all;
+}
+
+location / { #阻断User-Agent头的值为foo或bar的请求
+    if ($http_user_agent ~* foo|bar) {
+        return 403;
+    }
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;$http_*name*变量代指特定的请求头，如$http_user_agent&lt;/p&gt;
+
+&lt;h2 id=&#34;限制到后端服务器的链接:8cbe935a207c6e7ff36bf616be0564bc&#34;&gt;限制到后端服务器的链接&lt;/h2&gt;
+
+&lt;p&gt;nginx往往比backend服务器可以处理更大量的并发链接，在nginx上配置backend服务器的链接限制也是个不错的策略：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;upstream website {
+    server 192.168.100.1:80 max_conns=200; #最大连接数200
+    server 192.168.100.2:80 max_conns=200; 
+    queue 10 timeout=30s; #queue:所有服务器都达到最大链接数时的队列数，timeout:多长时间从队列中获取一个请求
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;应对range攻击:8cbe935a207c6e7ff36bf616be0564bc&#34;&gt;应对Range攻击&lt;/h2&gt;
+
+&lt;p&gt;一种攻击方式是发送一个http投中Range是很大值的请求，导致缓冲区溢出：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;GET / HTTP/1.1\r\n
+Host: stuff\r\n
+Range: bytes=0-18446744073709551615\r\n
+\r\n
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;应对这种攻击的其中一种方式是使用proxy_set_header指令设置Range为空字符串（&amp;rdquo;&amp;ldquo;），这会让nginx在将请求转发到后端服务器的时候删除Range字段：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;server {
+    listen 80;
+
+    location / {
+        proxy_set_header Range &amp;quot;&amp;quot;;
+        proxy_pass http://windowsserver:80;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果你的应用需要用到byte-range,可以使用下面的方法来检查Range字段的值是否超大：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;map $http_range $saferange {
+    &amp;quot;~\d{10,}&amp;quot; &amp;quot;&amp;quot;;  # if it matches a string of 10 or more integers, remove it
+    default $http_range;
+}
+
+server {
+    listen 80;
+
+    location / {
+            proxy_set_header Range $saferange;
+            proxy_pass http://windowsserver:80;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当Range的值超大的时候也可以返回444错误码，让nginx直接关闭连接：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;server {
+    listen 80;
+
+    if ($http_range ~ &amp;quot;\d{9,}&amp;quot;) {
+        return 444;
+    }
+
+    location / {
+            proxy_pass http://windowsserver:80;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;处理高负载:8cbe935a207c6e7ff36bf616be0564bc&#34;&gt;处理高负载&lt;/h2&gt;
+
+&lt;p&gt;DDoS攻击通常导致高负载。可以对nginx和操作系统网络配置方面做些优化来处理高负载问题，详细内容见下篇。：）&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;strong&gt;参考&lt;/strong&gt;
+&lt;a href=&#34;https://www.nginx.com/blog/mitigating-ddos-attacks-with-nginx-and-nginx-plus/&#34;&gt;https://www.nginx.com/blog/mitigating-ddos-attacks-with-nginx-and-nginx-plus/&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>学好数量化走遍天下都不怕？</title>
