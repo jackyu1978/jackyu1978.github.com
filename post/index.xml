@@ -25,11 +25,11 @@
 
 &lt;p&gt;&lt;strong&gt;ST：&lt;/strong&gt;服务票据（Service Ticket),通过Get参数传输，代表CAS服务端对特定用户，特定应用的访问授权。授权成功，对应应用生产会话后失效。&lt;/p&gt;
 
-&lt;h1 id=&#34;关键web流程图:dd0359c9bd9a6383521f6f985cb20765&#34;&gt;关键Web流程图&lt;/h1&gt;
+&lt;h1 id=&#34;cas登录认证web流程图:dd0359c9bd9a6383521f6f985cb20765&#34;&gt;CAS登录认证Web流程图&lt;/h1&gt;
 
 &lt;p&gt;&lt;img src=&#34;http://jasig.github.io/cas/4.0.x/images/cas_flow_diagram.png&#34; alt=&#34;流程图&#34; /&gt;&lt;/p&gt;
 
-&lt;h1 id=&#34;cas代理web流程图:dd0359c9bd9a6383521f6f985cb20765&#34;&gt;CAS代理Web流程图&lt;/h1&gt;
+&lt;h1 id=&#34;cas代理认证web流程图:dd0359c9bd9a6383521f6f985cb20765&#34;&gt;CAS代理认证Web流程图&lt;/h1&gt;
 
 &lt;p&gt;CAS协议还支持一种代理方式，一个CAS service充当另一个CAS service的代理，传输用户凭证。&lt;/p&gt;
 
