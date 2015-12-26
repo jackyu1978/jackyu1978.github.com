@@ -6,15 +6,141 @@
     <description>Recent content on 杰克的烦恼</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 25 Dec 2015 19:35:58 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 26 Dec 2015 19:49:42 +0800</lastBuildDate>
     <atom:link href="http://jackyu1978.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>nginx调优</title>
+      <link>http://jackyu1978.github.io/2015/12/26/ngix-better/</link>
+      <pubDate>Sat, 26 Dec 2015 19:49:42 +0800</pubDate>
+      
+      <guid>http://jackyu1978.github.io/2015/12/26/ngix-better/</guid>
+      <description>
+
+&lt;p&gt;nginx作为一款知名的高性能web服务器、代理服务器，使用nginx和linux的默认配置一般就可以达到很不错的性能。但在有些特殊情况下我们需要对nginx和系统的配置做些调整以达到更高的并发，更大的吞吐量。本篇文章就讨论下有哪些配置可以调整。&lt;/p&gt;
+
+&lt;h1 id=&#34;概述:099bbab29b4aced9712dde63bfe685af&#34;&gt;概述&lt;/h1&gt;
+
+&lt;p&gt;由于需要调整nginx和linux的参数，所以首先需要大家对nginx和linux系统相关的配置有些基本了解，这样才能更好理解这些配置调整的目的。&lt;/p&gt;
+
+&lt;p&gt;另外在实际调整的时候，请遵循一个规则：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;“一次只调整一个参数，然后对比看性能有没有提升，如果没有提升请改回默认配置。”&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;调整linux配置:099bbab29b4aced9712dde63bfe685af&#34;&gt;调整linux配置&lt;/h1&gt;
+
+&lt;p&gt;目前linux系统（2.6+）的默认配置满足正常的大部分使用场景，但改变一些参数的设置也可以相应提高性能。&lt;/p&gt;
+
+&lt;h2 id=&#34;调整backlog队列:099bbab29b4aced9712dde63bfe685af&#34;&gt;调整Backlog队列&lt;/h2&gt;
+
+&lt;p&gt;下面的设置可以调整linux的网络链接处理的性能，如果大量链接被挂起，可以尝试调整下面的参数：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;net.core.somaxconn:nginx可以accept的最大链接数队列。缺省值经常都较小，但nginx处理accetp的速度又很快。如果你的网站并发数大的话，可以尝试调整该参数。有时候该值太小linux kernel 日志中会有错误信息，可以增加该参数的值，直到错误消失。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;注意：&lt;/strong&gt;如果该值设置的大于512的时候，相应的改变nginx listen指令中backlog的值与之对应&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;net.core.netdev_max_backlog:网络包在被CPU处理之前被网卡缓存的比率。当带宽较大时，增大该值可以提高性能。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;调整文件描述符:099bbab29b4aced9712dde63bfe685af&#34;&gt;调整文件描述符&lt;/h2&gt;
+
+&lt;p&gt;文件描述符是系统表示网络链接和打开文件的一种系统资源。当nginx在代理模式时，一个请求需要占用两个文件描述符，一个表示客户端的链接，一个代表到被代理服务器的网络链接。当系统处理大量链接的时候，相关的参数需要做调整：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;sys.fs.file_mas:系统最大文件描述符限制&lt;/li&gt;
+&lt;li&gt;nofile:用户描述符限制，在/etc/security/limits.conf文件中设置&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;零时端口:099bbab29b4aced9712dde63bfe685af&#34;&gt;零时端口&lt;/h2&gt;
+
+&lt;p&gt;nginx作为代理的时候，每个到upstream服务器的链接都要占用一个零时端口，可以调整下面的值优化：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;net.ipv4.ip_local_port_range:本地端口起始-结束范围，如果你发现提示没有零时端口可用，就可以增大这个范围。通常的可以设置 1024-65000&lt;/li&gt;
+&lt;li&gt;net.ipv4.tcp_fin_timeout:零时端口可被重用的超时时间。缺省是60秒，通常可以缩短到30或15秒&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;调整nginx的配置:099bbab29b4aced9712dde63bfe685af&#34;&gt;调整nginx的配置&lt;/h1&gt;
+
+&lt;p&gt;下面列出一些会影响nginx性能的指令和配置项&lt;/p&gt;
+
+&lt;h2 id=&#34;工作进程数:099bbab29b4aced9712dde63bfe685af&#34;&gt;工作进程数&lt;/h2&gt;
+
+&lt;p&gt;nginx可以同时启动多个进程，每个进程处理一定的网络链接，你可以控制启动的工作进程数及他们处理网络链接的方式：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;worker_processes:工作进程数，缺省值1.通常一个CPU核心可以分配一个工作进程，其值可以设置成CPU核心数。如果程序中需要处理很多的磁盘I/O,可以适当调大该值。&lt;/li&gt;
+&lt;li&gt;worker_connections:每个工作进程可以处理的最大并发链接数。缺省值是512，但是系统一般有充分的资源可以支持更大的链接数。最佳值一般依赖服务器性能和网络状况，可以多次修改测试对比。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;keepalive设置:099bbab29b4aced9712dde63bfe685af&#34;&gt;Keepalive设置&lt;/h2&gt;
+
+&lt;p&gt;keepalive链接可以很大程度上减少CPU和网络负载，不用频繁创建和关闭链接。nginx在客户端链接和upstream链接中都支持Keepalive选项。下面的指令是跟客户端链接有关的：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;keepalive_request:一个keepalive长链接中，客户端可以发起的请求数，缺省值是100。&lt;/li&gt;
+&lt;li&gt;keepalive_timeout:keepalive空闲超时时间&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;下面的指令和upstream链接有关：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;keepalive&amp;ndash;每个工作进程保持到上游服务器的空闲KeepAlive连接数。没有默认值。
+为了启用到upstream服务器的长连接，还必须包含以下指令：&lt;/p&gt;
+
+&lt;p&gt;proxy_http_version 1.1;&lt;br /&gt;
+proxy_set_header Connection &amp;ldquo;&amp;rdquo;;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;记录访问日志:099bbab29b4aced9712dde63bfe685af&#34;&gt;记录访问日志&lt;/h2&gt;
+
+&lt;p&gt;记录每个请求的日志会消耗CPU和磁盘I/O,为了减少消耗可以开启访问日志记录缓存。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;在access_log指令中添加buffer=*size*参数&lt;/li&gt;
+&lt;li&gt;在access_log指令中添加flush=*time*参数&lt;/li&gt;
+&lt;li&gt;当工作进程打开或关闭日志文件时，也会记录对应的日志，可以在access_log指令中添加off参数关闭&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;sendfile:099bbab29b4aced9712dde63bfe685af&#34;&gt;Sendfile&lt;/h2&gt;
+
+&lt;p&gt;操作系统的sendfile()系统调用可以零拷贝将数据从一个文件描述符拷贝到另一个描述符，这可以提高TCP数据传输。这可以通过在http、server、location上下文中添加sendfile指令让nginx使用它。因为sendfile拷贝数据不通过用户空间，所以会破坏nginx的处理连和改变内容的过滤，比如输出gzip。当同时配置了sendfile指令和改变内容指令过滤器时，nginx自动让sendfile指令失效。&lt;/p&gt;
+
+&lt;h2 id=&#34;对请求做限制:099bbab29b4aced9712dde63bfe685af&#34;&gt;对请求做限制&lt;/h2&gt;
+
+&lt;p&gt;可以对客户端请求做一些限制，以防止消耗过多资源。这同时可以提高性能和安全性，相关指令如下：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;limit_conn和limmit_conn_zone:限制客户端链接数&lt;/li&gt;
+&lt;li&gt;limit_rate:限制对客户端的响应发送速率&lt;/li&gt;
+&lt;li&gt;limit和limit_req_zone:限制请求速率&lt;/li&gt;
+&lt;li&gt;max_conns，upstream配置块中server指令的一个参数，设置upstream服务器的并发链接数，如果设置为0（缺省为0），则表示没限制&lt;/li&gt;
+&lt;li&gt;queue(nginx plus):设置当所有upstream服务器都达到max_conns限制时，队列中的最大请求数。如果没有这个参数，请求不会被放入队列中&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;缓存和压缩:099bbab29b4aced9712dde63bfe685af&#34;&gt;缓存和压缩&lt;/h2&gt;
+
+&lt;h3 id=&#34;缓存:099bbab29b4aced9712dde63bfe685af&#34;&gt;缓存&lt;/h3&gt;
+
+&lt;p&gt;开启缓存可以减小upstream server的负载，提高响应速度&lt;/p&gt;
+
+&lt;h3 id=&#34;压缩:099bbab29b4aced9712dde63bfe685af&#34;&gt;压缩&lt;/h3&gt;
+
+&lt;p&gt;对响应进行压缩可以减小带宽消耗，但压缩会消耗CPU资源，但一般来说带宽比CPU贵。而对已一些已经压缩过的内容，如JPEG文件，就不用再压缩了。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;参考文章：&lt;/strong&gt;&lt;a href=&#34;https://www.nginx.com/blog/tuning-nginx/&#34; title=&#34;tuning-nginx&#34;&gt;tuning-nginx&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>CAS实现SSO的关键概念及流程</title>
-      <link>http://jackyu1978.github.io/blog/2015/12/25/cas%E5%AE%9E%E7%8E%B0sso%E7%9A%84%E5%85%B3%E9%94%AE%E6%A6%82%E5%BF%B5%E5%8F%8A%E6%B5%81%E7%A8%8B/</link>
+      <link>http://jackyu1978.github.io/2015/12/25/cas/</link>
       <pubDate>Fri, 25 Dec 2015 19:35:58 +0800</pubDate>
       
-      <guid>http://jackyu1978.github.io/blog/2015/12/25/cas%E5%AE%9E%E7%8E%B0sso%E7%9A%84%E5%85%B3%E9%94%AE%E6%A6%82%E5%BF%B5%E5%8F%8A%E6%B5%81%E7%A8%8B/</guid>
+      <guid>http://jackyu1978.github.io/2015/12/25/cas/</guid>
       <description>
 
 &lt;p&gt;CAS实现SSO一般包含多个CAS客户端和一个CAS服务端，客户端嵌入在特定的Web服务中（CAS services），服务端单独部署。CAS服务端保持用户及授权信息负责认证用户，及对应用的访问授权；CAS客户端负责保护应用并从CAS服务端获取用户信息。&lt;/p&gt;
@@ -39,10 +165,10 @@
     
     <item>
       <title>利用nginx防御DDoS攻击</title>
-      <link>http://jackyu1978.github.io/blog/2015/12/24/%E5%88%A9%E7%94%A8nginx%E9%98%B2%E5%BE%A1ddos%E6%94%BB%E5%87%BB/</link>
+      <link>http://jackyu1978.github.io/2015/12/24/ngix-ddos/</link>
       <pubDate>Thu, 24 Dec 2015 22:16:41 +0800</pubDate>
       
-      <guid>http://jackyu1978.github.io/blog/2015/12/24/%E5%88%A9%E7%94%A8nginx%E9%98%B2%E5%BE%A1ddos%E6%94%BB%E5%87%BB/</guid>
+      <guid>http://jackyu1978.github.io/2015/12/24/ngix-ddos/</guid>
       <description>
 
 &lt;p&gt;nginx有很多特性可以用来有效防御DDoS攻击&lt;/p&gt;
@@ -237,7 +363,7 @@ server {
 
 &lt;h2 id=&#34;处理高负载:8cbe935a207c6e7ff36bf616be0564bc&#34;&gt;处理高负载&lt;/h2&gt;
 
-&lt;p&gt;DDoS攻击通常导致高负载。可以对nginx和操作系统网络配置方面做些优化来处理高负载问题，详细内容见下篇。：）&lt;/p&gt;
+&lt;p&gt;DDoS攻击通常导致高负载。可以对nginx和操作系统网络配置方面做些优化来处理高负载问题，详细内容见下篇&lt;a href=&#34;http://www.daddyjackyu.com/2015/12/26/ngix-better/&#34;&gt;nginx调优&lt;/a&gt;&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -248,10 +374,10 @@ server {
     
     <item>
       <title>学好数量化走遍天下都不怕？</title>
-      <link>http://jackyu1978.github.io/blog/2015/12/17/%E5%AD%A6%E5%A5%BD%E6%95%B0%E9%87%8F%E5%8C%96%E8%B5%B0%E9%81%8D%E5%A4%A9%E4%B8%8B%E9%83%BD%E4%B8%8D%E6%80%95/</link>
+      <link>http://jackyu1978.github.io/2015/12/17/thinks/</link>
       <pubDate>Thu, 17 Dec 2015 23:42:04 +0800</pubDate>
       
-      <guid>http://jackyu1978.github.io/blog/2015/12/17/%E5%AD%A6%E5%A5%BD%E6%95%B0%E9%87%8F%E5%8C%96%E8%B5%B0%E9%81%8D%E5%A4%A9%E4%B8%8B%E9%83%BD%E4%B8%8D%E6%80%95/</guid>
+      <guid>http://jackyu1978.github.io/2015/12/17/thinks/</guid>
       <description>&lt;p&gt;今天晚上加班和领导过项目进展材料，最后结束的时候领导说&lt;/p&gt;
 
 &lt;blockquote&gt;

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>杰克的烦恼 &middot; 杰克奶爸</title>
+  <title>CAS实现SSO的关键概念及流程 &middot; 杰克奶爸</title>
 
   
   <link rel="stylesheet" href="http://jackyu1978.github.io/css/poole.css">
@@ -26,10 +26,10 @@
   
   
   
-  <link href="http://jackyu1978.github.io/index.xml" rel="alternate" type="application/rss+xml" title="杰克的烦恼 &middot; 杰克奶爸" />
+  
 
   <meta name="description" content="Your default page description">
-  <meta name="keywords" content="your,default,page,keywords">
+  <meta name="keywords" content="nginx,DDos">
   <link rel="author" href="http://plus.google.com/Your%20Google&#43;%20profile%20ID">
 </head>
 <body class="theme-base-07">
@@ -71,77 +71,38 @@
 
 
 <div class="content container">
-  <div class="posts">
+  <div class="post">
+    <h1>CAS实现SSO的关键概念及流程</h1>
+    <span class="post-date">Dec 25, 2015 &middot; 1 minute read
     
+    <br/>
+    <a  href="http://jackyu1978.github.io/categories/"></a>
+    </span>
     
-    <div class="post">
-      <h1 class="post-title">
-        <a href="http://jackyu1978.github.io/2015/12/26/ngix-better/">nginx调优</a>
-      </h1>
-      <span class="post-date">Dec 26, 2015 &middot; 1 minute read
-      
-      <br/>
-      <a  href="http://jackyu1978.github.io/categories/"></a>
-      </span>
-      
-      <p>nginx作为一款知名的高性能web服务器、代理服务器</p>
 
-      <a href="http://jackyu1978.github.io/2015/12/26/ngix-better/">Read On &rarr;</a>
-      
-    </div>
-    
-    <div class="post">
-      <h1 class="post-title">
-        <a href="http://jackyu1978.github.io/2015/12/25/cas/">CAS实现SSO的关键概念及流程</a>
-      </h1>
-      <span class="post-date">Dec 25, 2015 &middot; 1 minute read
-      
-      <br/>
-      <a  href="http://jackyu1978.github.io/categories/"></a>
-      </span>
-      
-      <p>CAS实现SSO一般包含多个CAS客户端和一个CAS服务端，</p>
+<p>CAS实现SSO一般包含多个CAS客户端和一个CAS服务端，客户端嵌入在特定的Web服务中（CAS services），服务端单独部署。CAS服务端保持用户及授权信息负责认证用户，及对应用的访问授权；CAS客户端负责保护应用并从CAS服务端获取用户信息。</p>
 
-      <a href="http://jackyu1978.github.io/2015/12/25/cas/">Read On &rarr;</a>
-      
-    </div>
-    
-    <div class="post">
-      <h1 class="post-title">
-        <a href="http://jackyu1978.github.io/2015/12/24/ngix-ddos/">利用nginx防御DDoS攻击</a>
-      </h1>
-      <span class="post-date">Dec 24, 2015 &middot; 2 minute read
-      
-      <br/>
-      <a  href="http://jackyu1978.github.io/categories/"></a>
-      </span>
-      
-      <p>nginx有很多特性可以用来有效防御DDoS攻击</p>
+<h1 id="主要概念:dd0359c9bd9a6383521f6f985cb20765">主要概念</h1>
 
-      <a href="http://jackyu1978.github.io/2015/12/24/ngix-ddos/">Read On &rarr;</a>
-      
-    </div>
-    
-    <div class="post">
-      <h1 class="post-title">
-        <a href="http://jackyu1978.github.io/2015/12/17/thinks/">学好数量化走遍天下都不怕？</a>
-      </h1>
-      <span class="post-date">Dec 17, 2015 &middot; 1 minute read
-      
-      <br/>
-      <a  href="http://jackyu1978.github.io/categories/"></a>
-      </span>
-      
-      <p>今天晚上加班和领导过项目进展材料，最后结束的时候领导说</p>
+<p><strong>TGT：</strong>票据授权票据（Ticket Granting Ticket），存储在CASTGC Cookie中，代表一个用户的SSO回话。</p>
 
-      <a href="http://jackyu1978.github.io/2015/12/17/thinks/">Read On &rarr;</a>
-      
-    </div>
-    
-    
-    
+<p><strong>ST：</strong>服务票据（Service Ticket),通过Get参数传输，代表CAS服务端对特定用户，特定应用的访问授权。授权成功，对应应用生产会话后失效。</p>
+
+<h1 id="cas登录认证web流程图:dd0359c9bd9a6383521f6f985cb20765">CAS登录认证Web流程图</h1>
+
+<p><img src="http://jasig.github.io/cas/4.0.x/images/cas_flow_diagram.png" alt="流程图" /></p>
+
+<h1 id="cas代理认证web流程图:dd0359c9bd9a6383521f6f985cb20765">CAS代理认证Web流程图</h1>
+
+<p>CAS协议还支持一种代理方式，一个CAS service充当另一个CAS service的代理，传输用户凭证。</p>
+
+<p><img src="http://jasig.github.io/cas/4.0.x/images/cas_proxy_flow_diagram.jpg" alt="代理流程图" /></p>
+
   </div>
+  
 </div>
+
+
 
 
 <script src="http://jackyu1978.github.io/js/highlight.pack.js"></script>
