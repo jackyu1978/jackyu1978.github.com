@@ -2,19 +2,39 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>杰克的烦恼</title>
-    <link>http://jackyu1978.github.io/categories/</link>
+    <link>http://www.daddyjackyu.com/categories/</link>
     <description>Recent content on 杰克的烦恼</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 28 Dec 2015 19:20:03 +0800</lastBuildDate>
-    <atom:link href="http://jackyu1978.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 01 Jan 2016 20:21:50 +0800</lastBuildDate>
+    <atom:link href="http://www.daddyjackyu.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>2015年之回顾</title>
+      <link>http://www.daddyjackyu.com/2016/01/01/review-2015/</link>
+      <pubDate>Fri, 01 Jan 2016 20:21:50 +0800</pubDate>
+      
+      <guid>http://www.daddyjackyu.com/2016/01/01/review-2015/</guid>
+      <description>&lt;p&gt;时间过得飞快，一转眼2015年就过去了，回顾这一年可以用两个字&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;“奔波”&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;来形容。每周在广深之间来回一次，我跟LD开玩笑说，我每周都要倒时差。在家庭生活和上班生活之中来回切换，真的是冷暖自知，辛苦自知。&lt;/p&gt;
+
+&lt;p&gt;2016继续加油！！！&lt;/p&gt;
+
+&lt;p&gt;做事情结果当然很重要，但更重要的是过程，是人生路上的风景。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;愿大家2015年收获满满，2016每天都精彩，快乐！！！&lt;/strong&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>安全产品之网络行为审计</title>
-      <link>http://jackyu1978.github.io/2015/12/28/product-audit/</link>
+      <link>http://www.daddyjackyu.com/2015/12/28/product-audit/</link>
       <pubDate>Mon, 28 Dec 2015 19:20:03 +0800</pubDate>
       
-      <guid>http://jackyu1978.github.io/2015/12/28/product-audit/</guid>
+      <guid>http://www.daddyjackyu.com/2015/12/28/product-audit/</guid>
       <description>
 
 &lt;p&gt;我进入安全行业首先接触到的就是“网络行为审计（管理）系统”，所以对它有特别的感情。 08年刚进入公司时首先接手的就是公司主打产品网络行为审计系统的服务端开发，由于前期产品开发较仓促，所以整个服务端很多地雷，一不小心就掉坑里。无论是系统架构设计、协议设计、后端数据库设计都有很多缺陷，当熟悉了这套系统后也对局部进行了很多优化改造，终于也达到了生产销售的标准。然后就是在各地跟第三方的后台系统对接，调试协议接口，当时调得最多的就是任子行，还有雨人。到后面这套后台系统也就我比较熟悉了。&lt;/p&gt;
@@ -71,10 +91,10 @@
     
     <item>
       <title>工作中的鸡群效应</title>
-      <link>http://jackyu1978.github.io/2015/12/27/chicken-group-effect/</link>
+      <link>http://www.daddyjackyu.com/2015/12/27/chicken-group-effect/</link>
       <pubDate>Sun, 27 Dec 2015 19:05:26 +0800</pubDate>
       
-      <guid>http://jackyu1978.github.io/2015/12/27/chicken-group-effect/</guid>
+      <guid>http://www.daddyjackyu.com/2015/12/27/chicken-group-effect/</guid>
       <description>&lt;p&gt;普度大学一位名叫威廉缪尔的生物进化学家研究了鸡群。他对生产率很感兴趣,但计算鸡的生产率很简单，只需要数数鸡蛋就行了。他想要知道如何提高鸡的生蛋率，所以他设计了一个巧妙的实验。鸡都是群居的，所以他先选择了一群普通的鸡,然后他让这一群鸡独自生存繁衍直到第六代。然后他又用生产力最强的鸡创建了第二个鸡群，你可以叫它们“超级鸡”，他将超级鸡放在一起成了“超级鸡群”，然后在每一代里，他都选择最高产的鸡来繁衍。在经过六代以后，他发现了什么呢？第一群普通的鸡，表现都还不错,它们都身形结实，羽翼丰满,并且鸡蛋的产量急剧增加。而第二群呢？除了三只以外全死了,那三只鸡把其他的鸡都啄死了。这些个个高产的鸡只是通过挤兑同伴才获得了成功。&lt;/p&gt;
 
 &lt;blockquote&gt;
@@ -135,10 +155,10 @@
     
     <item>
       <title>nginx调优</title>
-      <link>http://jackyu1978.github.io/2015/12/26/ngix-better/</link>
+      <link>http://www.daddyjackyu.com/2015/12/26/ngix-better/</link>
       <pubDate>Sat, 26 Dec 2015 19:49:42 +0800</pubDate>
       
-      <guid>http://jackyu1978.github.io/2015/12/26/ngix-better/</guid>
+      <guid>http://www.daddyjackyu.com/2015/12/26/ngix-better/</guid>
       <description>
 
 &lt;p&gt;nginx作为一款知名的高性能web服务器、代理服务器，使用nginx和linux的默认配置一般就可以达到很不错的性能。但在有些特殊情况下我们需要对nginx和系统的配置做些调整以达到更高的并发，更大的吞吐量。本篇文章就讨论下有哪些配置可以调整。&lt;/p&gt;
@@ -261,10 +281,10 @@ proxy_set_header Connection &amp;ldquo;&amp;rdquo;;&lt;/p&gt;&lt;/li&gt;
     
     <item>
       <title>CAS实现SSO的关键概念及流程</title>
-      <link>http://jackyu1978.github.io/2015/12/25/cas/</link>
+      <link>http://www.daddyjackyu.com/2015/12/25/cas/</link>
       <pubDate>Fri, 25 Dec 2015 19:35:58 +0800</pubDate>
       
-      <guid>http://jackyu1978.github.io/2015/12/25/cas/</guid>
+      <guid>http://www.daddyjackyu.com/2015/12/25/cas/</guid>
       <description>
 
 &lt;p&gt;CAS实现SSO一般包含多个CAS客户端和一个CAS服务端，客户端嵌入在特定的Web服务中（CAS services），服务端单独部署。CAS服务端保持用户及授权信息负责认证用户，及对应用的访问授权；CAS客户端负责保护应用并从CAS服务端获取用户信息。&lt;/p&gt;
@@ -289,10 +309,10 @@ proxy_set_header Connection &amp;ldquo;&amp;rdquo;;&lt;/p&gt;&lt;/li&gt;
     
     <item>
       <title>利用nginx防御DDoS攻击</title>
-      <link>http://jackyu1978.github.io/2015/12/24/ngix-ddos/</link>
+      <link>http://www.daddyjackyu.com/2015/12/24/ngix-ddos/</link>
       <pubDate>Thu, 24 Dec 2015 22:16:41 +0800</pubDate>
       
-      <guid>http://jackyu1978.github.io/2015/12/24/ngix-ddos/</guid>
+      <guid>http://www.daddyjackyu.com/2015/12/24/ngix-ddos/</guid>
       <description>
 
 &lt;p&gt;nginx有很多特性可以用来有效防御DDoS攻击&lt;/p&gt;
@@ -498,10 +518,10 @@ server {
     
     <item>
       <title>学好数量化走遍天下都不怕？</title>
-      <link>http://jackyu1978.github.io/2015/12/17/thinks/</link>
+      <link>http://www.daddyjackyu.com/2015/12/17/thinks/</link>
       <pubDate>Thu, 17 Dec 2015 23:42:04 +0800</pubDate>
       
-      <guid>http://jackyu1978.github.io/2015/12/17/thinks/</guid>
+      <guid>http://www.daddyjackyu.com/2015/12/17/thinks/</guid>
       <description>&lt;p&gt;今天晚上加班和领导过项目进展材料，最后结束的时候领导说&lt;/p&gt;
 
 &lt;blockquote&gt;
