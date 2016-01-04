@@ -6,8 +6,102 @@
     <description>Recent content in Posts on 杰克的烦恼</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 04 Jan 2016 20:18:05 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 04 Jan 2016 21:01:39 +0800</lastBuildDate>
     <atom:link href="http://www.daddyjackyu.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>使用Hugo搭建个人blog</title>
+      <link>http://www.daddyjackyu.com/2016/01/04/hugo-blog/</link>
+      <pubDate>Mon, 04 Jan 2016 21:01:39 +0800</pubDate>
+      
+      <guid>http://www.daddyjackyu.com/2016/01/04/hugo-blog/</guid>
+      <description>&lt;p&gt;Hugo是一个用Go语言编写的静态网站生成器,它使用起来非常简单，相对于Jekyll复杂的安装设置来说，Hugo仅需要一个二进制文件hugo(hugo.exe)即可轻松用于本地调试和生成静态页面。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/spf13/hugo/releases&#34;&gt;hugo下载&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://gohugo.io/&#34;&gt;hugo官网&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;下载下来后，只有一个叫hugo或者hugo.exe的程序，接下来进入cmd，开始生成自己的站点：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hugo new site mysite
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后hugo会自动生成这样一个目录结构：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;archetypes/
+content/
+layouts/
+static/
+config.toml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;config.toml是网站的配置文件，你可以将config.toml替换为YAML格式的config.yaml，或者json格式的config.json。hugo都支持。content目录里放的是你写的markdown文章，layouts目录里放的是网站的模板文件，static目录里放的是一些图片、css、js等资源。&lt;/p&gt;
+
+&lt;p&gt;进入生成的site目录：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd mysite
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;创建一个页面：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ hugo new about.md
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最好将md文件放在content的post目录里。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ hugo new post/first.md
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;执行完后，会在content/post目录自动生成一个MarkDown格式的first.md文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+++
+date = &amp;quot;2015-01-08T08:36:54-07:00&amp;quot;
+draft = true
+title = &amp;quot;first&amp;quot;
+
++++
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;+++可以替换为Jekyll一样的&amp;mdash;，里面的内容是这篇文章的一些信息。下面就可以开始写你的文章内容，比如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+++
+date = &amp;quot;2015-01-08T08:36:54-07:00&amp;quot;
+draft = true
+title = &amp;quot;first&amp;quot;
+
++++
+
+### Hello Hugo
+
+ 1. aaa
+ 1. bbb
+ 1. ccc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Hugo默认生成的网站是没有任何皮肤模板的。为了看看第一个写的示例，还得去Github上把一个网页模板下载下来。你可以在刚才的目录将Hugo官方的所有模板都下载下来：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git clone --recursive https://github.com/spf13/hugoThemes themes
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们可以先下载其中一个模板来看看效果吧：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd themes
+$ git clone https://github.com/spf13/hyde.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;启动本地调试：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ hugo server --theme=hyde --buildDrafts --watch
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;浏览器里打开：&lt;a href=&#34;http://127.0.0.1:1313&#34;&gt;http://127.0.0.1:1313&lt;/a&gt;
+&lt;img src=&#34;http://i.imgur.com/YuenLjb.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;至此一个简单使用markdown写作，然后利用hugo转成静态网页的环境就搭建好了。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;参考文章：&lt;/strong&gt;&lt;a href=&#34;http://blog.coderzh.com/2015/08/29/hugo/&#34;&gt;http://blog.coderzh.com/2015/08/29/hugo/&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>一周不用手机会怎样？</title>
@@ -19,7 +113,7 @@
 
 &lt;p&gt;2016年元旦假期后第一天到深圳上班，居然忘了带手机。考虑安全性，因为手机上有网银等一堆重要应用，最终还是决定不让LD快递过来。这一周我就不用手机了，看看会怎样。后面我会把这一周每天的体会记录下来。看看现代人到底还能不能离开手机。&lt;/p&gt;
 
-&lt;h2 id=&#34;第一天:b06b146e5c4363583dcea6fda5c965c9&#34;&gt;第一天&lt;/h2&gt;
+&lt;h2 id=&#34;第一天-2016-01-04:b06b146e5c4363583dcea6fda5c965c9&#34;&gt;第一天（2016-01-04）&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;首先把公司的固话及同事手机号告诉LD，如果有重要事情可以联系我。&lt;/li&gt;
