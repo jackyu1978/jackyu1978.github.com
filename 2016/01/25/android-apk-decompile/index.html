@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>android apk反编译 &middot; 奶爸杰克</title>
+
+  
+  <link rel="stylesheet" href="http://www.daddyjackyu.com/css/poole.css">
+  <link rel="stylesheet" href="http://www.daddyjackyu.com/css/hyde.css">
+  <link rel="stylesheet" href="http://www.daddyjackyu.com/css/poole-overrides.css">
+  <link rel="stylesheet" href="http://www.daddyjackyu.com/css/hyde-overrides.css">
+  <link rel="stylesheet" href="http://www.daddyjackyu.com/css/hyde-x.css">
+  <link rel="stylesheet" href="http://www.daddyjackyu.com/css/highlight/dark.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://www.daddyjackyu.com/touch-icon-144-precomposed.png">
+  <link href="http://www.daddyjackyu.com/favicon.png" rel="icon">
+
+  
+  
+  
+  
+
+  <meta name="description" content="Your default page description">
+  <meta name="keywords" content=",">
+  <link rel="author" href="http://plus.google.com/Your%20Google&#43;%20profile%20ID">
+</head>
+<body class="theme-base-07">
+<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+        <img src="http://www.daddyjackyu.com/img/author.png"
+             alt="author" title="奶爸杰克">
+      <h1>奶爸杰克</h1>
+      <p class="lead">做一个思考者</p>
+    </div>
+
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item"><a href="http://www.daddyjackyu.com/">主页</a></li>
+      
+    </ul>
+
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item">
+	  <a href="mailto:yzg@outlook.com"><i class="fa fa-envelope-o fa-3x"></i></a>
+      <a href="http://www.github.com/jackyu1978"><i class="fa fa-github-square fa-3x"></i></a>
+      
+      
+      
+      
+      
+      
+      
+      
+      </li>
+    </ul>
+
+    
+
+    <p>Copyright &copy; 2016 All rights reserved.<br/>
+    </p>
+  </div>
+</div>
+
+
+<div class="content container">
+  <div class="post">
+    <h1>android apk反编译</h1>
+    <span class="post-date">Jan 25, 2016 &middot; 1 minute read
+    
+    <br/>
+    <a  href="http://www.daddyjackyu.com/categories/"></a>
+    </span>
+    
+
+<h2 id="安装java运行环境:05f612c3d522f21a7c12a2b6e79591b2">安装Java运行环境</h2>
+
+<p>从Oracle官网下载JDK安装包，安装JAVA运行环境
+<a href="http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html">下载</a></p>
+
+<p>并配置好JAVA_HOME、PATH等环境变量。此处不多说，可以自己去google下JAVA运行环境安装及配置</p>
+
+<h2 id="工具准备:05f612c3d522f21a7c12a2b6e79591b2">工具准备</h2>
+
+<ul>
+<li><strong><a href="http://pan.baidu.com/s/1skuYVa1">apktool</a></strong> &ndash;资源文件获取，可以提取出图片文件和布局文件进行使用查看，反编译成smali代码</li>
+<li><strong><a href="http://pan.baidu.com/s/1jHpNCVk">dex2jar</a></strong> &ndash;将apk反编译成java源码（classes.dex转化成jar文件）</li>
+<li><strong><a href="http://pan.baidu.com/s/1hrq7CHY">jd-gui</a></strong> &ndash;查看APK中classes.dex转化成的jar文件，即Java源码文件</li>
+</ul>
+
+<h2 id="反编译步骤:05f612c3d522f21a7c12a2b6e79591b2">反编译步骤</h2>
+
+<h3 id="1-apk反编译得到smali程序的源代码-图片-xml配置-语言资源等文件:05f612c3d522f21a7c12a2b6e79591b2">1. apk反编译得到smali程序的源代码、图片、XML配置、语言资源等文件</h3>
+
+<p>使用apktool工具，打开命令行，进入apktool目录，输入以下命令：</p>
+
+<pre><code>java -jar apktool.jar d -f xxx.apk
+</code></pre>
+
+<p><img src="http://i.imgur.com/SDhL3Jo.png" alt="" />
+其中xxx.apk是需要反编译的apk文件。
+执行成功的话在当前目录下会生成与apk同名的目录，其中包含的内容有：
+smali代码目录（smali）、资源目录（res)、XML配置文件（AndroidManifest.xml）等
+<img src="http://i.imgur.com/MAnaJ2o.png" alt="" /></p>
+
+<h3 id="2-apk反编译得到java源代码:05f612c3d522f21a7c12a2b6e79591b2">2. Apk反编译得到Java源代码</h3>
+
+<p>将要反编译的APK后缀名改为.rar或则 .zip，并解压，得到其中的额classes.dex文件（它就是java文件编译再通过dx工具打包而成的），下载上述工具中的dex2jar，解压，在命令行下进入解压目录，输入：</p>
+
+<pre><code>d2j-dex2jar.bat classes.dex
+</code></pre>
+
+<p>在该目录下会生成一个classes_dex2jar.jar的文件，然后打开工具jd-gui文件夹里的jd-gui.exe，之后用该工具打开之前生成的classes_dex2jar.jar文件，便可以看到源码了，效果如下：
+<img src="http://i.imgur.com/jo50pue.png" alt="" /></p>
+
+<h3 id="3-学习别人的apk代码-并尝试修改:05f612c3d522f21a7c12a2b6e79591b2">3.学习别人的apk代码，并尝试修改</h3>
+
+<p>通过第二部已经看到了apk的java源代码，这时就可以认真学习下别人的apk是怎么编写的了。如果对Java代码看懂了，理解了逻辑，这时想对apk做些修改之类的，就可以到第一步反编译得出的<strong>smali</strong>代码目录中找到与java代码对应的smali代码，然后修改之，这时候就需要学习smali语法了。smali语法请自行google学习.</p>
+
+<h3 id="4-重新打包apk:05f612c3d522f21a7c12a2b6e79591b2">4.重新打包APK</h3>
+
+<p>使用apktool工具重新打包修改后的应用（修改了smali代码后），输入：</p>
+
+<pre><code>java -jar apktool.jar b apkdir
+</code></pre>
+
+<p><img src="http://i.imgur.com/dv6D068.png" alt="" /></p>
+
+<h3 id="5-重新对apk签名:05f612c3d522f21a7c12a2b6e79591b2">5.重新对APK签名</h3>
+
+<p>创建key，需要用到keytool.exe (位于jdk\jre\bin目录下)，打开cmd输入:</p>
+
+<pre><code>keytool -genkey -alias my.keystore -keyalg RSA -validity 40000 -keystore my.keystore
+</code></pre>
+
+<p><strong>说明：</strong></p>
+
+<p>genkey 产生密钥</p>
+
+<p>alias demo.keystore 别名 demo.keystore</p>
+
+<p>keyalg RSA 使用RSA算法对签名加密</p>
+
+<p>validity 40000 有效期限4000天</p>
+
+<p>keystore demo.keystore */</p>
+
+<pre><code>jarsigner -verbose -keystore my.keystore -signedjar demo_signed.apk demo.apk my.keystore
+</code></pre>
+
+<p><strong>说明：</strong></p>
+
+<p>keystore  demo.keystore 密钥库位置</p>
+
+<p>signedjar demor_signed.apk demo.apk my.keystore 正式签名，三个参数中依次为签名后产生的文件demo_signed，要签名的文件demo.apk和密钥库my.keystore.</p>
+
+<h3 id="6-安装apk:05f612c3d522f21a7c12a2b6e79591b2">6.安装APK</h3>
+
+<p>修改后，重新签名的APK就可以拷贝到手机重新安装了，因为是用自己生成的key签名的，手机可能会提示病毒或木马，不用管它，安装就是。然后运行看看自己修改的功能有没有生效吧。</p>
+
+<h2 id="结论:05f612c3d522f21a7c12a2b6e79591b2">结论</h2>
+
+<p><strong>注：本文只是列出了大概的步骤，反编译中重要和困难的是第3步，这个需要大量的经历和学习。</strong></p>
+
+  </div>
+  
+</div>
+
+
+
+
+<script src="http://www.daddyjackyu.com/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script>
+  var _gaq=[['_setAccount','Your Google Analytics tracking code'],['_trackPageview']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+</body>
+</html>
+

@@ -6,8 +6,144 @@
     <description>Recent content in Posts on 杰克的烦恼</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 14 Jan 2016 19:21:26 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 25 Jan 2016 21:18:57 +0800</lastBuildDate>
     <atom:link href="http://www.daddyjackyu.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>android apk反编译</title>
+      <link>http://www.daddyjackyu.com/2016/01/25/android-apk-decompile/</link>
+      <pubDate>Mon, 25 Jan 2016 21:18:57 +0800</pubDate>
+      
+      <guid>http://www.daddyjackyu.com/2016/01/25/android-apk-decompile/</guid>
+      <description>
+
+&lt;h2 id=&#34;安装java运行环境:1ae17908b3708f10df24274c20bd0313&#34;&gt;安装Java运行环境&lt;/h2&gt;
+
+&lt;p&gt;从Oracle官网下载JDK安装包，安装JAVA运行环境
+&lt;a href=&#34;http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html&#34;&gt;下载&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;并配置好JAVA_HOME、PATH等环境变量。此处不多说，可以自己去google下JAVA运行环境安装及配置&lt;/p&gt;
+
+&lt;h2 id=&#34;工具准备:1ae17908b3708f10df24274c20bd0313&#34;&gt;工具准备&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;http://pan.baidu.com/s/1skuYVa1&#34;&gt;apktool&lt;/a&gt;&lt;/strong&gt; &amp;ndash;资源文件获取，可以提取出图片文件和布局文件进行使用查看，反编译成smali代码&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;http://pan.baidu.com/s/1jHpNCVk&#34;&gt;dex2jar&lt;/a&gt;&lt;/strong&gt; &amp;ndash;将apk反编译成java源码（classes.dex转化成jar文件）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;http://pan.baidu.com/s/1hrq7CHY&#34;&gt;jd-gui&lt;/a&gt;&lt;/strong&gt; &amp;ndash;查看APK中classes.dex转化成的jar文件，即Java源码文件&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;反编译步骤:1ae17908b3708f10df24274c20bd0313&#34;&gt;反编译步骤&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;apk反编译得到smali程序的源代码、图片、XML配置、语言资源等文件
+使用apktool工具，打开命令行，进入apktool目录，输入一下命令：
+&lt;code&gt;java -jar apktool.jar d -f xxx.apk outputdir&lt;/code&gt;,
+其中xxx.apk是需要反编译的apk文件，outputdir是反编译后输出的目录名称。
+执行成功的话在当前目录下会生成outputdir目录，其中包含的目录内容有：
+&lt;img src=&#34;http://i.imgur.com/MAnaJ2o.png&#34; alt=&#34;&#34; /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>android apk反编译</title>
+      <link>http://www.daddyjackyu.com/2016/01/25/android-apk-decompile/</link>
+      <pubDate>Mon, 25 Jan 2016 21:18:57 +0800</pubDate>
+      
+      <guid>http://www.daddyjackyu.com/2016/01/25/android-apk-decompile/</guid>
+      <description>
+
+&lt;h2 id=&#34;安装java运行环境:05f612c3d522f21a7c12a2b6e79591b2&#34;&gt;安装Java运行环境&lt;/h2&gt;
+
+&lt;p&gt;从Oracle官网下载JDK安装包，安装JAVA运行环境
+&lt;a href=&#34;http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html&#34;&gt;下载&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;并配置好JAVA_HOME、PATH等环境变量。此处不多说，可以自己去google下JAVA运行环境安装及配置&lt;/p&gt;
+
+&lt;h2 id=&#34;工具准备:05f612c3d522f21a7c12a2b6e79591b2&#34;&gt;工具准备&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;http://pan.baidu.com/s/1skuYVa1&#34;&gt;apktool&lt;/a&gt;&lt;/strong&gt; &amp;ndash;资源文件获取，可以提取出图片文件和布局文件进行使用查看，反编译成smali代码&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;http://pan.baidu.com/s/1jHpNCVk&#34;&gt;dex2jar&lt;/a&gt;&lt;/strong&gt; &amp;ndash;将apk反编译成java源码（classes.dex转化成jar文件）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;http://pan.baidu.com/s/1hrq7CHY&#34;&gt;jd-gui&lt;/a&gt;&lt;/strong&gt; &amp;ndash;查看APK中classes.dex转化成的jar文件，即Java源码文件&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;反编译步骤:05f612c3d522f21a7c12a2b6e79591b2&#34;&gt;反编译步骤&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-apk反编译得到smali程序的源代码-图片-xml配置-语言资源等文件:05f612c3d522f21a7c12a2b6e79591b2&#34;&gt;1. apk反编译得到smali程序的源代码、图片、XML配置、语言资源等文件&lt;/h3&gt;
+
+&lt;p&gt;使用apktool工具，打开命令行，进入apktool目录，输入以下命令：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;java -jar apktool.jar d -f xxx.apk
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://i.imgur.com/SDhL3Jo.png&#34; alt=&#34;&#34; /&gt;
+其中xxx.apk是需要反编译的apk文件。
+执行成功的话在当前目录下会生成与apk同名的目录，其中包含的内容有：
+smali代码目录（smali）、资源目录（res)、XML配置文件（AndroidManifest.xml）等
+&lt;img src=&#34;http://i.imgur.com/MAnaJ2o.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-apk反编译得到java源代码:05f612c3d522f21a7c12a2b6e79591b2&#34;&gt;2. Apk反编译得到Java源代码&lt;/h3&gt;
+
+&lt;p&gt;将要反编译的APK后缀名改为.rar或则 .zip，并解压，得到其中的额classes.dex文件（它就是java文件编译再通过dx工具打包而成的），下载上述工具中的dex2jar，解压，在命令行下进入解压目录，输入：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;d2j-dex2jar.bat classes.dex
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在该目录下会生成一个classes_dex2jar.jar的文件，然后打开工具jd-gui文件夹里的jd-gui.exe，之后用该工具打开之前生成的classes_dex2jar.jar文件，便可以看到源码了，效果如下：
+&lt;img src=&#34;http://i.imgur.com/jo50pue.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;3-学习别人的apk代码-并尝试修改:05f612c3d522f21a7c12a2b6e79591b2&#34;&gt;3.学习别人的apk代码，并尝试修改&lt;/h3&gt;
+
+&lt;p&gt;通过第二部已经看到了apk的java源代码，这时就可以认真学习下别人的apk是怎么编写的了。如果对Java代码看懂了，理解了逻辑，这时想对apk做些修改之类的，就可以到第一步反编译得出的&lt;strong&gt;smali&lt;/strong&gt;代码目录中找到与java代码对应的smali代码，然后修改之，这时候就需要学习smali语法了。smali语法请自行google学习.&lt;/p&gt;
+
+&lt;h3 id=&#34;4-重新打包apk:05f612c3d522f21a7c12a2b6e79591b2&#34;&gt;4.重新打包APK&lt;/h3&gt;
+
+&lt;p&gt;使用apktool工具重新打包修改后的应用（修改了smali代码后），输入：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;java -jar apktool.jar b apkdir
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://i.imgur.com/dv6D068.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;5-重新对apk签名:05f612c3d522f21a7c12a2b6e79591b2&#34;&gt;5.重新对APK签名&lt;/h3&gt;
+
+&lt;p&gt;创建key，需要用到keytool.exe (位于jdk\jre\bin目录下)，打开cmd输入:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;keytool -genkey -alias my.keystore -keyalg RSA -validity 40000 -keystore my.keystore
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;说明：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;genkey 产生密钥&lt;/p&gt;
+
+&lt;p&gt;alias demo.keystore 别名 demo.keystore&lt;/p&gt;
+
+&lt;p&gt;keyalg RSA 使用RSA算法对签名加密&lt;/p&gt;
+
+&lt;p&gt;validity 40000 有效期限4000天&lt;/p&gt;
+
+&lt;p&gt;keystore demo.keystore */&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;jarsigner -verbose -keystore my.keystore -signedjar demo_signed.apk demo.apk my.keystore
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;说明：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;keystore  demo.keystore 密钥库位置&lt;/p&gt;
+
+&lt;p&gt;signedjar demor_signed.apk demo.apk my.keystore 正式签名，三个参数中依次为签名后产生的文件demo_signed，要签名的文件demo.apk和密钥库my.keystore.&lt;/p&gt;
+
+&lt;h3 id=&#34;6-安装apk:05f612c3d522f21a7c12a2b6e79591b2&#34;&gt;6.安装APK&lt;/h3&gt;
+
+&lt;p&gt;修改后，重新签名的APK就可以拷贝到手机重新安装了，因为是用自己生成的key签名的，手机可能会提示病毒或木马，不用管它，安装就是。然后运行看看自己修改的功能有没有生效吧。&lt;/p&gt;
+
+&lt;h2 id=&#34;结论:05f612c3d522f21a7c12a2b6e79591b2&#34;&gt;结论&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;注：本文只是列出了大概的步骤，反编译中重要和困难的是第3步，这个需要大量的经历和学习。&lt;/strong&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>工作面试中常见错误Top 10</title>
